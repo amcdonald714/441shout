@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onNewMessage(AndHocMessage msg) {
                 String message = msg.get("msg");
-                String msgId = msg.get("uuid");
+                String msgId = msg.get("msgId");
 
                 if (!repeatCheck.contains(msgId)) {
                     repeatCheck.add(msgId);
@@ -69,32 +69,46 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
+
+
+        if(!AndHocService.isRunning()) {
+            AndHocService.startAndHocService(this);
+        }
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d("TEST", "Hello " + AndHocService.listening);
+                AndHocService.listening = !AndHocService.listening;
+            }
+        }, 5000, 5000);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(!AndHocService.isRunning()) {
-            AndHocService.startAndHocService(this);
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mMessenger.stopBroadcast(this);
+        AndHocService.listening = true;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mMessenger.stopBroadcast(this);
+        AndHocService.listening = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mMessenger.stopBroadcast(this);
+        AndHocService.listening = true;
     }
 
     private void reloadMessages() {
@@ -120,18 +134,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onClickShout(View view) {
-        if(AndHocService.listening) {
-            AndHocService.listening = false;
-        } else {
-            timer.cancel();
-        }
-
         String message = editTextMessage.getText().toString();
         editTextMessage.setText("");
 
         if (!message.equals("")) {
             AndHocMessage record = new AndHocMessage();
-            record.add("uuid", UUID.randomUUID().toString());
+            record.add("msgId", UUID.randomUUID().toString());
             record.add("msg", message);
             messageList.add(message);
             Log.d("FeedReader", "Sending message: "+message);
@@ -139,14 +147,6 @@ public class MainActivity extends ActionBarActivity {
             mDbHelper.insertMessage(record);
             mMessenger.broadcast(this, record);
         }
-
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                AndHocService.listening = true;
-            }
-        }, 7000);
     }
 
     @Override
