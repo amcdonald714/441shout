@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<String> repeatCheck = new ArrayList<String>();
 
     private AndHocMessenger mMessenger;
-    private Timer timer;
     private FeedReaderDbHelper mDbHelper;
 
     @Override
@@ -69,14 +68,6 @@ public class MainActivity extends ActionBarActivity {
         if(!AndHocService.isRunning()) {
             AndHocService.startAndHocService(this);
         }
-
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                AndHocService.setListening(!AndHocService.getListening());
-            }
-        }, 5000, 5000);
     }
 
     @Override
@@ -87,21 +78,21 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mMessenger.stopBroadcast(this);
+//        mMessenger.stopBroadcast(this);
         AndHocService.setListening(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mMessenger.stopBroadcast(this);
+//        mMessenger.stopBroadcast(this);
         AndHocService.setListening(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMessenger.stopBroadcast(this);
+//        mMessenger.stopBroadcast(this);
         AndHocService.setListening(true);
     }
 
@@ -120,8 +111,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onResume() {
-        AndHocService.setListening(true);
         super.onResume();
+        AndHocService.setListening(true);
 //        reloadMessages();
     }
 
@@ -147,7 +138,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
