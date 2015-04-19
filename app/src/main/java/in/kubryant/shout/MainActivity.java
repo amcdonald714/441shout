@@ -1,8 +1,8 @@
 package in.kubryant.shout;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -31,12 +32,15 @@ public class MainActivity extends ActionBarActivity {
 
     private AndHocMessenger mMessenger;
     private Timer timer;
+    private FeedReaderDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("Shout!");
+        mDbHelper = new FeedReaderDbHelper(getApplicationContext());
+//        mDbHelper.clear();  DON'T UNCOMMENT THIS - IT DELETES THE TABLE
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
         ListView messageListView = (ListView) findViewById(R.id.messageListView);
@@ -46,17 +50,21 @@ public class MainActivity extends ActionBarActivity {
 
         mMessenger = new AndHocMessenger(this);
 
+//        reloadMessages();
+
         AndHocService.addListener(new AndHocMessageListener() {
             @Override
             public void onNewMessage(AndHocMessage msg) {
                 String message = msg.get("msg");
-                String msgId = msg.get("user");
+                String msgId = msg.get("uuid");
 
                 if (!repeatCheck.contains(msgId)) {
                     repeatCheck.add(msgId);
                     if (!message.equals("")) {
+                        Toast.makeText(getApplicationContext(), "Inserting message", Toast.LENGTH_LONG).show();
                         messageList.add(message);
                         mAdapter.notifyDataSetChanged();
+                        mDbHelper.insertMessage(msg);
                     }
                 }
             }
@@ -89,12 +97,26 @@ public class MainActivity extends ActionBarActivity {
         mMessenger.stopBroadcast(this);
     }
 
+    private void reloadMessages() {
+        if(messageList.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Reloading messages", Toast.LENGTH_LONG).show();
+            Set<AndHocMessage> messages = mDbHelper.getAllMessages();
+            for (AndHocMessage message : messages) {
+                String msg = message.get("msg");
+                Log.d("FeedReader", "Reloading message: "+msg);
+                messageList.add(msg);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         if(!AndHocService.isRunning()) {
             AndHocService.startAndHocService(this);
         }
+        reloadMessages();
     }
 
     public void onClickShout(View view) {
@@ -109,10 +131,12 @@ public class MainActivity extends ActionBarActivity {
 
         if (!message.equals("")) {
             AndHocMessage record = new AndHocMessage();
-            record.add("user", UUID.randomUUID().toString());
+            record.add("uuid", UUID.randomUUID().toString());
             record.add("msg", message);
             messageList.add(message);
+            Log.d("FeedReader", "Sending message: "+message);
             mAdapter.notifyDataSetChanged();
+            mDbHelper.insertMessage(record);
             mMessenger.broadcast(this, record);
         }
 

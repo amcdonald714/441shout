@@ -2,6 +2,7 @@ package in.kubryant.andhoclib.src;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import in.kubryant.andhoclib.interfaces.AndHocMessageInterface;
 
@@ -32,5 +33,9 @@ public class AndHocMessage implements AndHocMessageInterface {
     @Override
     public void add(String key, String value) {
         record.put(key, value);
+    }
+
+    public Set<String> getKeys() {
+        return record.keySet();
     }
 }
