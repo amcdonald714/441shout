@@ -5,4 +5,5 @@
     <string name="no_shouts">You haven\'t received any Shouts yet!</string>
     <string name="shout">Shout!</string>
     <string name="messageHint"> Type to Shout...</string>
+    <string name="action_clear_messages">Clear Messages</string>
 </resources>
