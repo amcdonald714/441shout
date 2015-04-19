@@ -49,8 +49,6 @@ public class MainActivity extends ActionBarActivity {
 
         mMessenger = new AndHocMessenger(this);
 
-//        reloadMessages();
-
         AndHocService.addListener(new AndHocMessageListener() {
             @Override
             public void onNewMessage(AndHocMessage msg) {
@@ -148,6 +146,11 @@ public class MainActivity extends ActionBarActivity {
             case R.id.action_settings:
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
+                return true;
+            case R.id.action_clear_messages:
+                mDbHelper.clear();
+                messageList.clear();
+                mAdapter.notifyDataSetChanged();
                 return true;
             default: return super.onOptionsItemSelected(item);
         }

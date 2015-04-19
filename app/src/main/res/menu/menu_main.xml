@@ -3,4 +3,5 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context="in.kubryant.shout.MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_clear_messages" android:title="@string/action_clear_messages" />
 </menu>

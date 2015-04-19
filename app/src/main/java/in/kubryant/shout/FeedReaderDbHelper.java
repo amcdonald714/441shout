@@ -41,10 +41,9 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
     public void clear() {
-//        Seriously, don't do this.  Actually, if I call onCreate after, it's probably fine.
-//        SQLiteDatabase db = getWritableDatabase();
-//        db.execSQL("DROP TABLE "+FeedReaderContract.FeedEntry.TABLE_NAME);
-//        onCreate(db);
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE "+FeedReaderContract.FeedEntry.TABLE_NAME);
+        onCreate(db);
     }
     public boolean checkDb() {
         SQLiteDatabase db = null;
