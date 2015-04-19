@@ -137,7 +137,6 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
                         Log.d(TAG, "Service discovery failed (" + reason + ")");
                     }
                 });
-//                Toast.makeText(getApplicationContext(), "Listening", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -145,7 +144,7 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
                 Log.d(TAG, "Service request failed (" + reason + ")");
             }
         });
-        handler.postDelayed(this, 3000);
+        handler.postDelayed(this, 6000);
     }
 
     @Override
