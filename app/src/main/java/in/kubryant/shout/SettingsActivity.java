@@ -1,6 +1,8 @@
 package in.kubryant.shout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -9,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 
@@ -16,6 +19,7 @@ public class SettingsActivity extends ActionBarActivity {
     private static final String PREFERENCE_GENERAL = "preference_category_general";
     private static final String PREFERENCE_SYNC = "preference_category_sync";
     private static final String PREFERENCE_NOTIFICATION = "preference_category_notification";
+    private static final String SHARED_PREF = "shared_preferences";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,17 +84,59 @@ public class SettingsActivity extends ActionBarActivity {
         }
     }
 
-    public static class GeneralPreferencesFragment extends PreferenceFragment {
+    public static class GeneralPreferencesFragment extends PreferenceFragment
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
+            onSharedPreferenceChanged(null, "");
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+
         }
 
         @Override
         public void onResume() {
             super.onResume();
+            SettingsActivity activity = (SettingsActivity) getActivity();
+            Context context = activity.getApplicationContext();
+
+//            SharedPreferences settings;
+//            SharedPreferences.Editor editor;
+//            settings = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+//            editor = settings.edit();
+//
+//            editor.putString("USERNAME", "Anonymous");
+//            editor.commit();
+
             ((SettingsActivity) getActivity()).getSupportActionBar().setTitle(R.string.pref_header_general);
+
+            getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+
+        }
+
+        @Override
+        public void onPause() {
+            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+            super.onPause();
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Log.d("OurSettings", "Preference changed: "+key);
+            Log.d("OurSettings", "?: "+(key.equals("username")));
+            if(key.equals("username")) {
+                Log.d("OurSettings", "New username: "+sharedPreferences.getString(key, "Anonymous"));
+            }
         }
     }
 

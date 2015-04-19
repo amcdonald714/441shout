@@ -2,6 +2,7 @@ package in.kubryant.shout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -121,7 +122,12 @@ public class MainActivity extends ActionBarActivity {
         if (!message.equals("")) {
             String msgId = UUID.randomUUID().toString();
             Shout shout = new Shout();
-            shout.setUser("Anonymous");
+            String username = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString("username", "Anonymous");
+            if(username.equals("Anonymous")) {
+                Log.d("OurSettings", "Anonymous username");
+            }
+            shout.setUser(username);
             shout.setMsg(message);
             shout.setTime("April 19, 3:15PM");
             shout.setMsgId(msgId);
@@ -149,8 +155,8 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             case R.id.action_clear_messages:
                 mDbHelper.clear();
-                messageList.clear();
-                mAdapter.notifyDataSetChanged();
+                shoutList.clear();
+                shoutAdapter.notifyDataSetChanged();
                 return true;
             default: return super.onOptionsItemSelected(item);
         }
