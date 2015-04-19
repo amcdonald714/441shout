@@ -104,6 +104,7 @@ public class MainActivity extends ActionBarActivity {
                 String msg = message.get("msg");
                 Log.d("FeedReader", "Reloading message: " + msg);
                 shoutList.add(message);
+                repeatCheck.add(message.getMsgId());
             }
             shoutAdapter.notifyDataSetChanged();
         }
