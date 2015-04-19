@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -18,6 +19,8 @@ import in.kubryant.andhoclib.src.AndHocMessage;
  * Created by camherringshaw on 4/18/15.
  */
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
+    private static final String TAG = "FeedReader";
+
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "messages.db";
@@ -38,35 +41,49 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
     public void clear() {
-//        Seriously, don't do this
+//        Seriously, don't do this.  Actually, if I call onCreate after, it's probably fine.
 //        SQLiteDatabase db = getWritableDatabase();
 //        db.execSQL("DROP TABLE "+FeedReaderContract.FeedEntry.TABLE_NAME);
+//        onCreate(db);
+    }
+    public boolean checkDb() {
+        SQLiteDatabase db = null;
+        try {
+            db = getWritableDatabase();
+            db.close();
+        } catch (SQLiteException e) {
+            //No database
+        }
+        return (db != null) ? true : false;
     }
 
     public void insertMessage(AndHocMessage message) {
-        Log.d("FeedReader", "Logging message: "+message.get("msg"));
+        Log.d(TAG, "Logging message: "+message.get("msg"));
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.COLUMN_UUID, message.get("uuid"));
+        values.put(FeedReaderContract.FeedEntry.COLUMN_UUID, message.get("msgId"));
         values.put(FeedReaderContract.FeedEntry.COLUMN_USERNAME, "");
         values.put(FeedReaderContract.FeedEntry.COLUMN_MESSAGE, message.get("msg"));
 
         long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
-//        db.insertOrThrow(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
     }
     public Set<AndHocMessage> getAllMessages() {
+        Log.d(TAG, "Getting all messages");
         SQLiteDatabase db = this.getReadableDatabase();
 
         String sortOrder = FeedReaderContract.FeedEntry.COLUMN_TIMESTAMP;
         Set<AndHocMessage> messages = new HashSet<>();
 
         Cursor c = db.rawQuery("SELECT * from " + FeedReaderContract.FeedEntry.TABLE_NAME, null);
+        int m=0;
         if(c.moveToFirst()) {
             do {
+                Log.d(TAG, "Getting message "+(m++));
                 Map<String, String> messageMap = new HashMap<String, String>();
                 int count = c.getColumnCount();
                 for(int i=0; i<count; i++) {
+                    Log.d(TAG, "\tColumn: "+c.getColumnName(i)+"\t\tValue: "+c.getString(i));
                     messageMap.put(c.getColumnName(i), c.getString(i));
                 }
                 AndHocMessage message = new AndHocMessage(messageMap);
