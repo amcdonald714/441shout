@@ -64,10 +64,10 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
 
     @Override
     public void run() {
-        stopListen();
         if(AndHocService.listening) {
-            listen();
+            restartListen();
         } else {
+            stopListen();
             handler.postDelayed(this, 3000);
         }
     }
@@ -154,6 +154,22 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
             @Override
             public void onSuccess() {
                 Log.d(TAG, "Listening Stopped");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.d(TAG, "Listening stop failed (" + reason + ")");
+            }
+        });
+    }
+
+    @Override
+    public void restartListen() {
+        mManager.clearServiceRequests(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Listening Restarting");
+                listen();
             }
 
             @Override

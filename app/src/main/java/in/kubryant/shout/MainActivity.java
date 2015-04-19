@@ -153,11 +153,13 @@ public class MainActivity extends ActionBarActivity {
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
                 return true;
-            case R.id.action_clear_messages:
-                mDbHelper.clear();
-                shoutList.clear();
-                shoutAdapter.notifyDataSetChanged();
-                return true;
+
+//            case R.id.action_clear_messages:
+//                mDbHelper.clear();
+//                messageList.clear();
+//                mAdapter.notifyDataSetChanged();
+//                return true;
+
             default: return super.onOptionsItemSelected(item);
         }
     }
