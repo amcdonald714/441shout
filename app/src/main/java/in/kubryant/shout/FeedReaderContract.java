@@ -14,9 +14,9 @@ public final class FeedReaderContract {
     public static abstract class FeedEntry implements BaseColumns {
         public static final String TABLE_NAME = "messages";
         public static final String COLUMN_UUID = "msgId";
-        public static final String COLUMN_USERNAME = "username";
+        public static final String COLUMN_USERNAME = "user";
         public static final String COLUMN_MESSAGE = "msg";
-        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TIMESTAMP = "time";
     }
 
     public static final String SQL_CREATE_ENTRIES =

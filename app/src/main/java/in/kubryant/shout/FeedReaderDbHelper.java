@@ -56,7 +56,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return (db != null) ? true : false;
     }
 
-    public void insertMessage(AndHocMessage message) {
+    public void insertMessage(Shout message) {
         Log.d(TAG, "Logging message: "+message.get("msg"));
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -67,12 +67,12 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
     }
-    public Set<AndHocMessage> getAllMessages() {
+    public Set<Shout> getAllMessages() {
         Log.d(TAG, "Getting all messages");
         SQLiteDatabase db = this.getReadableDatabase();
 
         String sortOrder = FeedReaderContract.FeedEntry.COLUMN_TIMESTAMP;
-        Set<AndHocMessage> messages = new HashSet<>();
+        Set<Shout> messages = new HashSet<>();
 
         Cursor c = db.rawQuery("SELECT * from " + FeedReaderContract.FeedEntry.TABLE_NAME, null);
         int m=0;
@@ -85,7 +85,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     Log.d(TAG, "\tColumn: "+c.getColumnName(i)+"\t\tValue: "+c.getString(i));
                     messageMap.put(c.getColumnName(i), c.getString(i));
                 }
-                AndHocMessage message = new AndHocMessage(messageMap);
+                Shout message = new Shout(new AndHocMessage(messageMap));
                 messages.add(message);
             }while(c.moveToNext());
         }

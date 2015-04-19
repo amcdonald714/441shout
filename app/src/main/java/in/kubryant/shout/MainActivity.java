@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -60,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
                     repeatCheck.add(msgId);
                     shoutList.add(shout);
                     shoutAdapter.notifyDataSetChanged();
+                    mDbHelper.insertMessage(shout);
                 }
             }
         });
@@ -103,24 +103,24 @@ public class MainActivity extends ActionBarActivity {
         AndHocService.setListening(true);
     }
 
-//    private void reloadMessages() {
-//        if(messageList.isEmpty()) {
-//            Toast.makeText(getApplicationContext(), "Reloading messages", Toast.LENGTH_LONG).show();
-//            Set<AndHocMessage> messages = mDbHelper.getAllMessages();
-//            for (AndHocMessage message : messages) {
-//                String msg = message.get("msg");
-//                Log.d("FeedReader", "Reloading message: "+msg);
-//                messageList.add(msg);
-//            }
-//            mAdapter.notifyDataSetChanged();
-//        }
-//    }
+    private void reloadMessages() {
+        if(shoutList.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Reloading messages", Toast.LENGTH_LONG).show();
+            Set<Shout> messages = mDbHelper.getAllMessages();
+            for (Shout message : messages) {
+                String msg = message.get("msg");
+                Log.d("FeedReader", "Reloading message: "+msg);
+                shoutList.add(message);
+            }
+            shoutAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     protected void onResume() {
         AndHocService.setListening(true);
         super.onResume();
-//        reloadMessages();
+        reloadMessages();
     }
 
     public void onClickShout(View view) {
@@ -140,6 +140,7 @@ public class MainActivity extends ActionBarActivity {
 
             shoutAdapter.notifyDataSetChanged();
             mMessenger.broadcast(this, shout);
+            mDbHelper.insertMessage(shout);
         }
     }
 
@@ -159,8 +160,8 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             case R.id.action_clear_messages:
                 mDbHelper.clear();
-                messageList.clear();
-                mAdapter.notifyDataSetChanged();
+                shoutList.clear();
+                shoutAdapter.notifyDataSetChanged();
                 return true;
             default: return super.onOptionsItemSelected(item);
         }

@@ -21,3 +21,5 @@ app/app.iml
 *.aar
 
 .gradle/2.2.1/taskArtifacts/cache.properties.lock
+
+.idea/workspace.xml
