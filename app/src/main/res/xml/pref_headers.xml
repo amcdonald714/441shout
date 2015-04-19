@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="preference_category_general"
+        android:title="@string/pref_header_general"
+        android:summary="General preferences." />
+
+    <Preference
+        android:key="preference_category_sync"
+        android:title="@string/pref_header_sync"
+        android:summary="Listen preferences." />
+
+    <Preference
+        android:key="preference_category_notification"
+        android:title="@string/pref_header_notifications"
+        android:summary="Notification preferences." />
+</PreferenceScreen>

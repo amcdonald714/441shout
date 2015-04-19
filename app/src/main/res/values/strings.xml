@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Shout!</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="no_shouts">You haven\'t received any Shouts yet!</string>
+    <string name="shout">Shout!</string>
+    <string name="messageHint"> Type to Shout...</string>
+</resources>
