@@ -167,7 +167,7 @@ public class MainActivity extends ActionBarActivity {
 
     private String getTime() {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, h:m a", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, h:mm a", Locale.US);
         return sdf.format(cal.getTime());
     }
 }
