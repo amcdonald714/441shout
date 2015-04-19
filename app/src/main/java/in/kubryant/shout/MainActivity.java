@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onNewMessage(AndHocMessage msg) {
                 String message = msg.get("msg");
-                String msgId = msg.get("user");
+                String msgId = msg.get("msgId");
 
                 if (!repeatCheck.contains(msgId)) {
                     repeatCheck.add(msgId);
@@ -61,68 +61,65 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+
         if(!AndHocService.isRunning()) {
             AndHocService.startAndHocService(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMessenger.stopBroadcast(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mMessenger.stopBroadcast(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mMessenger.stopBroadcast(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!AndHocService.isRunning()) {
-            AndHocService.startAndHocService(this);
-        }
-    }
-
-    public void onClickShout(View view) {
-        if(AndHocService.listening) {
-            AndHocService.listening = false;
-        } else {
-            timer.cancel();
-        }
-
-        String message = editTextMessage.getText().toString();
-        editTextMessage.setText("");
-
-        if (!message.equals("")) {
-            AndHocMessage record = new AndHocMessage();
-            record.add("user", UUID.randomUUID().toString());
-            record.add("msg", message);
-            messageList.add(message);
-            mAdapter.notifyDataSetChanged();
-            mMessenger.broadcast(this, record);
         }
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                AndHocService.listening = true;
+                Log.d("TEST", "Hello " + AndHocService.listening);
+                AndHocService.listening = !AndHocService.listening;
             }
-        }, 7000);
+        }, 5000, 5000);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMessenger.stopBroadcast(this);
+        AndHocService.listening = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mMessenger.stopBroadcast(this);
+        AndHocService.listening = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMessenger.stopBroadcast(this);
+        AndHocService.listening = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    public void onClickShout(View view) {
+        String message = editTextMessage.getText().toString();
+        editTextMessage.setText("");
+
+        if (!message.equals("")) {
+            AndHocMessage record = new AndHocMessage();
+            record.add("msgId", UUID.randomUUID().toString());
+            record.add("msg", message);
+            messageList.add(message);
+            mAdapter.notifyDataSetChanged();
+            mMessenger.broadcast(this, record);
+        }
     }
 
     @Override
