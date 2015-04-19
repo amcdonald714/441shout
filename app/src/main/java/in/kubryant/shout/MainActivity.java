@@ -3,19 +3,16 @@ package in.kubryant.shout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.UUID;
 
 import in.kubryant.andhoclib.src.AndHocMessage;
@@ -39,6 +36,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("Shout!");
+        getSupportActionBar().setElevation(0);
+
         mDbHelper = new FeedReaderDbHelper(getApplicationContext());
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
@@ -114,26 +113,6 @@ public class MainActivity extends ActionBarActivity {
 //        reloadMessages();
     }
 
-    public void onClickShout(View view) {
-        String message = editTextMessage.getText().toString();
-        editTextMessage.setText("");
-
-        if (!message.equals("")) {
-            String msgId = UUID.randomUUID().toString();
-            Shout shout = new Shout();
-            shout.setUser("Anonymous");
-            shout.setMsg(message);
-            shout.setTime("April 19, 3:15PM");
-            shout.setMsgId(msgId);
-            shoutList.add(shout);
-
-            repeatCheck.add(msgId);
-
-            shoutAdapter.notifyDataSetChanged();
-            mMessenger.broadcast(this, shout);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -154,5 +133,31 @@ public class MainActivity extends ActionBarActivity {
 //                return true;
             default: return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onClickShout(View view) {
+        String message = editTextMessage.getText().toString();
+        editTextMessage.setText("");
+
+        if (!message.equals("")) {
+            String msgId = UUID.randomUUID().toString();
+            Shout shout = new Shout();
+            shout.setUser("Anonymous");
+            shout.setMsg(message);
+            shout.setTime(getTime());
+            shout.setMsgId(msgId);
+            shoutList.add(shout);
+
+            repeatCheck.add(msgId);
+
+            shoutAdapter.notifyDataSetChanged();
+            mMessenger.broadcast(this, shout);
+        }
+    }
+
+    private String getTime() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, h:m a", Locale.US);
+        return sdf.format(cal.getTime());
     }
 }
