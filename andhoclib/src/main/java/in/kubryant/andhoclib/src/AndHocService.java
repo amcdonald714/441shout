@@ -12,6 +12,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import in.kubryant.andhoclib.interfaces.AndHocServiceInterface;
 
@@ -25,12 +27,23 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
 
+    private Timer timer;
+
     @Override
     public void onCreate() {
         Log.d(TAG, "AndHocService Created");
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         new Thread(this, "AndHocService").start();
+        AndHocService.setListening(true);
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                AndHocService.setListening(!AndHocService.getListening());
+            }
+        }, 5000, 5000);
     }
 
     @Override
@@ -51,10 +64,10 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
 
     @Override
     public void run() {
-        stopListen();
         if(AndHocService.listening) {
-            listen();
+            restartListen();
         } else {
+            stopListen();
             handler.postDelayed(this, 3000);
         }
     }
@@ -141,6 +154,22 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
             @Override
             public void onSuccess() {
                 Log.d(TAG, "Listening Stopped");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.d(TAG, "Listening stop failed (" + reason + ")");
+            }
+        });
+    }
+
+    @Override
+    public void restartListen() {
+        mManager.clearServiceRequests(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Listening Restarting");
+                listen();
             }
 
             @Override

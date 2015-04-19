@@ -12,7 +12,8 @@
         android:hint="@string/messageHint"
         android:layout_alignParentBottom="true"
         android:inputType="text"
-        android:layout_toLeftOf="@+id/shouldButton"
+        android:layout_toStartOf="@+id/shoutButton"
+        android:layout_toLeftOf="@+id/shoutButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -30,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/shout"
-        android:id="@+id/shouldButton"
+        android:id="@+id/shoutButton"
         android:onClick="onClickShout"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"

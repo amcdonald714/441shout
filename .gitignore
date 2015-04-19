@@ -4,20 +4,12 @@ build
 *.iml
 local.properties
 andhoclib/andhoclib.iml
+andhoclib/build
 app/app.iml
-*.class
-*.jar
-
 *.lock
-
-*.lock
-
 *.bin
-
 *.jar
-
 *.class
-
 *.aar
 
 .gradle/2.2.1/taskArtifacts/cache.properties.lock
