@@ -1,8 +1,8 @@
 package in.kubryant.shout;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -28,16 +29,18 @@ public class MainActivity extends ActionBarActivity {
     private ListView shoutListView;
     private ShoutAdapter shoutAdapter;
 
-    private ArrayList<String> repeatCheck = new ArrayList<>();
+    private ArrayList<String> repeatCheck = new ArrayList<String>();
 
     private AndHocMessenger mMessenger;
     private Timer timer;
+    private FeedReaderDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("Shout!");
+        mDbHelper = new FeedReaderDbHelper(getApplicationContext());
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
         shoutList = new ArrayList<Shout>();
@@ -46,6 +49,8 @@ public class MainActivity extends ActionBarActivity {
         shoutListView.setAdapter(shoutAdapter);
 
         mMessenger = new AndHocMessenger(this);
+
+//        reloadMessages();
 
         AndHocService.addListener(new AndHocMessageListener() {
             @Override
@@ -100,9 +105,24 @@ public class MainActivity extends ActionBarActivity {
         AndHocService.setListening(true);
     }
 
+//    private void reloadMessages() {
+//        if(messageList.isEmpty()) {
+//            Toast.makeText(getApplicationContext(), "Reloading messages", Toast.LENGTH_LONG).show();
+//            Set<AndHocMessage> messages = mDbHelper.getAllMessages();
+//            for (AndHocMessage message : messages) {
+//                String msg = message.get("msg");
+//                Log.d("FeedReader", "Reloading message: "+msg);
+//                messageList.add(msg);
+//            }
+//            mAdapter.notifyDataSetChanged();
+//        }
+//    }
+
     @Override
     protected void onResume() {
+        AndHocService.setListening(true);
         super.onResume();
+//        reloadMessages();
     }
 
     public void onClickShout(View view) {

@@ -1,7 +1,9 @@
-.idea/
+.idea/*
 .gradle
 build
 *.iml
 local.properties
 andhoclib/andhoclib.iml
 app/app.iml
+*.class
+*.jar
