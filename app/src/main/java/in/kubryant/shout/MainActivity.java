@@ -25,10 +25,11 @@ import in.kubryant.andhoclib.src.AndHocService;
 
 public class MainActivity extends ActionBarActivity {
     private EditText editTextMessage;
+    private ArrayList<Shout> shoutList;
+    private ListView shoutListView;
+    private ShoutAdapter shoutAdapter;
 
-    private ArrayAdapter<String> mAdapter;
-    private ArrayList<String> messageList = new ArrayList<>();
-    private ArrayList<String> repeatCheck = new ArrayList<>();
+    private ArrayList<String> repeatCheck = new ArrayList<String>();
 
     private AndHocMessenger mMessenger;
     private Timer timer;
@@ -42,30 +43,26 @@ public class MainActivity extends ActionBarActivity {
         mDbHelper = new FeedReaderDbHelper(getApplicationContext());
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
-        ListView messageListView = (ListView) findViewById(R.id.messageListView);
-
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messageList);
-        messageListView.setAdapter(mAdapter);
+        shoutList = new ArrayList<Shout>();
+        shoutListView = (ListView) findViewById(R.id.messageListView);
+        shoutAdapter = new ShoutAdapter(this, shoutList);
+        shoutListView.setAdapter(shoutAdapter);
 
         mMessenger = new AndHocMessenger(this);
 
         AndHocService.addListener(new AndHocMessageListener() {
             @Override
             public void onNewMessage(AndHocMessage msg) {
-                String message = msg.get("msg");
-                String msgId = msg.get("msgId");
+                Shout shout = new Shout(msg);
+                String msgId = shout.getMsgId();
 
                 if (!repeatCheck.contains(msgId)) {
                     repeatCheck.add(msgId);
-                    if (!message.equals("")) {
-                        messageList.add(message);
-                        mAdapter.notifyDataSetChanged();
-                        mDbHelper.insertMessage(msg);
-                    }
+                    shoutList.add(shout);
+                    shoutAdapter.notifyDataSetChanged();
                 }
             }
         });
-
 
         if(!AndHocService.isRunning()) {
             AndHocService.startAndHocService(this);
@@ -75,8 +72,7 @@ public class MainActivity extends ActionBarActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.d("TEST", "Hello " + AndHocService.listening);
-                AndHocService.listening = !AndHocService.listening;
+                AndHocService.setListening(!AndHocService.getListening());
             }
         }, 5000, 5000);
     }
@@ -90,43 +86,41 @@ public class MainActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         mMessenger.stopBroadcast(this);
-        AndHocService.listening = true;
+        AndHocService.setListening(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mMessenger.stopBroadcast(this);
-        AndHocService.listening = true;
+        AndHocService.setListening(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mMessenger.stopBroadcast(this);
-        AndHocService.listening = true;
+        AndHocService.setListening(true);
     }
 
-    private void reloadMessages() {
-        if(messageList.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Reloading messages", Toast.LENGTH_LONG).show();
-            Set<AndHocMessage> messages = mDbHelper.getAllMessages();
-            for (AndHocMessage message : messages) {
-                String msg = message.get("msg");
-                Log.d("FeedReader", "Reloading message: "+msg);
-                messageList.add(msg);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
-    }
+//    private void reloadMessages() {
+//        if(messageList.isEmpty()) {
+//            Toast.makeText(getApplicationContext(), "Reloading messages", Toast.LENGTH_LONG).show();
+//            Set<AndHocMessage> messages = mDbHelper.getAllMessages();
+//            for (AndHocMessage message : messages) {
+//                String msg = message.get("msg");
+//                Log.d("FeedReader", "Reloading message: "+msg);
+//                messageList.add(msg);
+//            }
+//            mAdapter.notifyDataSetChanged();
+//        }
+//    }
 
     @Override
     protected void onResume() {
+        AndHocService.setListening(true);
         super.onResume();
-        if(!AndHocService.isRunning()) {
-            AndHocService.startAndHocService(this);
-        }
-        reloadMessages();
+//        reloadMessages();
     }
 
     public void onClickShout(View view) {
@@ -134,13 +128,18 @@ public class MainActivity extends ActionBarActivity {
         editTextMessage.setText("");
 
         if (!message.equals("")) {
-            AndHocMessage record = new AndHocMessage();
-            record.add("msgId", UUID.randomUUID().toString());
-            record.add("msg", message);
-            messageList.add(message);
-            mAdapter.notifyDataSetChanged();
-            mDbHelper.insertMessage(record);
-            mMessenger.broadcast(this, record);
+            String msgId = UUID.randomUUID().toString();
+            Shout shout = new Shout();
+            shout.setUser("Anonymous");
+            shout.setMsg(message);
+            shout.setTime("April 19, 3:15PM");
+            shout.setMsgId(msgId);
+            shoutList.add(shout);
+
+            repeatCheck.add(msgId);
+
+            shoutAdapter.notifyDataSetChanged();
+            mMessenger.broadcast(this, shout);
         }
     }
 

@@ -19,7 +19,7 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
     private final String TAG = AndHocService.class.getSimpleName();
 
     private Handler handler = new Handler();
-    public static boolean listening = false;
+    private static boolean listening = false;
 
     private static AndHocMessageListener mListener = null;
     private WifiP2pManager mManager;
@@ -51,10 +51,11 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
 
     @Override
     public void run() {
+        stopListen();
         if(AndHocService.listening) {
             listen();
         } else {
-            handler.postDelayed(this, 5000);
+            handler.postDelayed(this, 3000);
         }
     }
 
@@ -91,13 +92,13 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
 
     @Override
     public void listen() {
+        Log.d(TAG, "Listening Started");
         WifiP2pManager.DnsSdTxtRecordListener txtListener = new WifiP2pManager.DnsSdTxtRecordListener() {
             @Override
             public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> record, WifiP2pDevice srcDevice) {
             Log.d(TAG, "Record available: " + record.toString());
             AndHocMessage message = new AndHocMessage(record);
             mListener.onNewMessage(message);
-            stopListen();
             }
         };
         WifiP2pManager.DnsSdServiceResponseListener servListener = new WifiP2pManager.DnsSdServiceResponseListener() {
@@ -131,7 +132,7 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
                 Log.d(TAG, "Service request failed (" + reason + ")");
             }
         });
-        handler.postDelayed(this, 5000);
+        handler.postDelayed(this, 3000);
     }
 
     @Override
@@ -147,5 +148,13 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
                 Log.d(TAG, "Listening stop failed (" + reason + ")");
             }
         });
+    }
+
+    public static void setListening(boolean listening) {
+        AndHocService.listening = listening;
+    }
+
+    public static boolean getListening() {
+        return AndHocService.listening;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 import in.kubryant.andhoclib.interfaces.AndHocMessageInterface;
 
 public class AndHocMessage implements AndHocMessageInterface {
-    Map<String, String> record = new HashMap<String, String>();
+    protected Map<String, String> record = new HashMap<String, String>();
 
     public AndHocMessage() {}
 
