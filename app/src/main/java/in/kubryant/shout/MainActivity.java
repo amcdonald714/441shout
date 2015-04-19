@@ -40,7 +40,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("Shout!");
         mDbHelper = new FeedReaderDbHelper(getApplicationContext());
-//        mDbHelper.clear();  DON'T UNCOMMENT THIS - IT DELETES THE TABLE
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
         ListView messageListView = (ListView) findViewById(R.id.messageListView);
@@ -61,7 +60,6 @@ public class MainActivity extends ActionBarActivity {
                 if (!repeatCheck.contains(msgId)) {
                     repeatCheck.add(msgId);
                     if (!message.equals("")) {
-                        Toast.makeText(getApplicationContext(), "Inserting message", Toast.LENGTH_LONG).show();
                         messageList.add(message);
                         mAdapter.notifyDataSetChanged();
                         mDbHelper.insertMessage(msg);
@@ -142,7 +140,6 @@ public class MainActivity extends ActionBarActivity {
             record.add("msgId", UUID.randomUUID().toString());
             record.add("msg", message);
             messageList.add(message);
-            Log.d("FeedReader", "Sending message: "+message);
             mAdapter.notifyDataSetChanged();
             mDbHelper.insertMessage(record);
             mMessenger.broadcast(this, record);
