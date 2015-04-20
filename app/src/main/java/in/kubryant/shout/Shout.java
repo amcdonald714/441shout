@@ -3,12 +3,13 @@ package in.kubryant.shout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Locale;
 
 import in.kubryant.andhoclib.src.AndHocMessage;
 
 public class Shout extends AndHocMessage {
+
+    private String timeRecv;
 
     public Shout(AndHocMessage message) {
         setUser(message.get("user"));
@@ -27,9 +28,6 @@ public class Shout extends AndHocMessage {
     public String toString() {
         return "Shout: time: " + getTime() + " recv: " + getTimeRecv() + " msg: " + getMsg();
     }
-
-    // ascending this - s1
-    // desc s1 - this
 
     public static Comparator<Shout> ReceivedTimeSort = new Comparator<Shout>() {
         @Override
@@ -84,7 +82,7 @@ public class Shout extends AndHocMessage {
         record.put("msgId", msgId);
     }
     public void setTimeRecv(String timeRecv) {
-        record.put("timeRecv", timeRecv);
+        this.timeRecv = timeRecv;
     }
 
     // Getters
@@ -101,7 +99,7 @@ public class Shout extends AndHocMessage {
         return record.get("msgId");
     }
     public String getTimeRecv() {
-        return record.get("timeRecv");
+        return this.timeRecv;
     }
     public String getHumanTime() {
         return makeHumanReadable(getTime());

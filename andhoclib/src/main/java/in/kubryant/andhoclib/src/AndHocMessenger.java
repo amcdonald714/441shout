@@ -25,16 +25,17 @@ public class AndHocMessenger implements AndHocMessengerInterface{
 
     @Override
     public void broadcast(final Context context, AndHocMessage record) {
+        Log.d(TAG, "Broadcast Started");
         mServiceInfo = WifiP2pDnsSdServiceInfo.newInstance("_msg", "_presence._tcp", record.getRecord());
         mManager.addLocalService(mChannel, mServiceInfo, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(context, "Message broadcasting", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Message broadcasting", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(context, "Broadcasting failed (" + reason + ")", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Broadcasting failed (" + reason + ")", Toast.LENGTH_SHORT).show();
                 mServiceInfo = null;
             }
         });
@@ -42,16 +43,17 @@ public class AndHocMessenger implements AndHocMessengerInterface{
 
     @Override
     public void stopBroadcast(final Context context) {
+        Log.d(TAG, "Broadcast Stopped");
         mManager.clearLocalServices(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(context, "Broadcast stopped", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Broadcast stopped", Toast.LENGTH_SHORT).show();
                 mServiceInfo = null;
             }
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(context, "Broadcast stop failed (" + reason + ")", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Broadcast stop failed (" + reason + ")", Toast.LENGTH_SHORT).show();
             }
         });
     }
