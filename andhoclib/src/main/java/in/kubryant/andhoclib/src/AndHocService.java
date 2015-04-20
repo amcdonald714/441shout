@@ -27,7 +27,7 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
 
-    private Timer timer;
+    private int listenFrequency = 6000;
 
     @Override
     public void onCreate() {
@@ -36,14 +36,6 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
         mChannel = mManager.initialize(this, getMainLooper(), null);
         new Thread(this, "AndHocService").start();
         AndHocService.setListening(true);
-
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                AndHocService.setListening(!AndHocService.getListening());
-            }
-        }, 5000, 5000);
     }
 
     @Override
@@ -65,10 +57,13 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
     @Override
     public void run() {
         if(AndHocService.listening) {
-            restartListen();
+            AndHocService.setListening(false);
+            //restartListen();
+            listen();
         } else {
             stopListen();
-            handler.postDelayed(this, 3000);
+            AndHocService.setListening(true);
+            handler.postDelayed(this, listenFrequency);
         }
     }
 
@@ -129,7 +124,7 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
                 mManager.discoverServices(mChannel, new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
-                        Log.d(TAG, "Services Discovered");
+                        Log.d(TAG, "Discover services success");
                     }
 
                     @Override
@@ -144,7 +139,7 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
                 Log.d(TAG, "Service request failed (" + reason + ")");
             }
         });
-        handler.postDelayed(this, 6000);
+        handler.postDelayed(this, listenFrequency);
     }
 
     @Override
