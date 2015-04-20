@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -164,10 +165,12 @@ public class MainActivity extends ActionBarActivity {
                 shoutAdapter.notifyDataSetChanged();
                 return true;
             case R.id.menu_sort_received_time:
-                Log.d("TEST", "ACTION SORT BY RECEIVED TIME");
+                Collections.sort(shoutList, Shout.ReceivedTimeSort);
+                shoutAdapter.notifyDataSetChanged();
                 return true;
             case R.id.menu_sort_sent_time:
-                Log.d("TEST", "ACTION SORT BY SENT TIME");
+                Collections.sort(shoutList, Shout.CreatedTimeSort);
+                shoutAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
