@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import in.kubryant.andhoclib.src.AndHocMessage;
 
-public class Shout extends AndHocMessage implements Comparable<Shout> {
+public class Shout extends AndHocMessage {
 
     public Shout(AndHocMessage message) {
         setUser(message.get("user"));
@@ -23,17 +23,23 @@ public class Shout extends AndHocMessage implements Comparable<Shout> {
         setTimeRecv(getTimestamp());
     }
 
-    public int compareTo(Shout s1) {
-
-
-        // ascending: this - s1
-        // descending: s1 - this
-        return 0;
+    @Override
+    public String toString() {
+        return "Shout: time: " + getTime() + " recv: " + getTimeRecv() + " msg: " + getMsg();
     }
+
+    // ascending this - s1
+    // desc s1 - this
 
     public static Comparator<Shout> ReceivedTimeSort = new Comparator<Shout>() {
         @Override
         public int compare(Shout s1, Shout s2) {
+            Long cmp = Long.parseLong(s2.getTimeRecv()) - Long.parseLong(s1.getTimeRecv());
+            if (cmp > 0) {
+                return 1;
+            } else if (cmp < 0) {
+                return -1;
+            }
             return 0;
         }
     };
@@ -41,6 +47,12 @@ public class Shout extends AndHocMessage implements Comparable<Shout> {
     public static Comparator<Shout> CreatedTimeSort = new Comparator<Shout>() {
         @Override
         public int compare(Shout s1, Shout s2) {
+            Long cmp = Long.parseLong(s2.getTime()) - Long.parseLong(s1.getTime());
+            if (cmp > 0) {
+                return 1;
+            } else if (cmp < 0) {
+                return -1;
+            }
             return 0;
         }
     };
