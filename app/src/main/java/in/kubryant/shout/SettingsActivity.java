@@ -25,6 +25,7 @@ public class SettingsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Fragment fragment = new ApplicationPreferencesFragment();
@@ -90,38 +91,14 @@ public class SettingsActivity extends ActionBarActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
-            onSharedPreferenceChanged(null, "");
-        }
-
-        @Override
-        public void onStart() {
-            super.onStart();
-
         }
 
         @Override
         public void onResume() {
             super.onResume();
-            SettingsActivity activity = (SettingsActivity) getActivity();
-            Context context = activity.getApplicationContext();
-
-//            SharedPreferences settings;
-//            SharedPreferences.Editor editor;
-//            settings = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-//            editor = settings.edit();
-//
-//            editor.putString("USERNAME", "Anonymous");
-//            editor.commit();
-
             ((SettingsActivity) getActivity()).getSupportActionBar().setTitle(R.string.pref_header_general);
-
+            ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-        }
-
-        @Override
-        public void onStop() {
-            super.onStop();
-
         }
 
         @Override
@@ -131,12 +108,14 @@ public class SettingsActivity extends ActionBarActivity {
         }
 
         @Override
+        public void onDestroy() {
+            super.onDestroy();
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Setting");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
+        }
+
+        @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.d("OurSettings", "Preference changed: "+key);
-            Log.d("OurSettings", "?: "+(key.equals("username")));
-            if(key.equals("username")) {
-                Log.d("OurSettings", "New username: "+sharedPreferences.getString(key, "Anonymous"));
-            }
         }
     }
 
@@ -146,6 +125,20 @@ public class SettingsActivity extends ActionBarActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_sync);
         }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle(R.string.pref_header_sync);
+            ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Setting");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
+        }
     }
 
     public static class NotificationPreferencesFragment extends PreferenceFragment {
@@ -153,6 +146,20 @@ public class SettingsActivity extends ActionBarActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_notification);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle(R.string.pref_header_notifications);
+            ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
+        }
+        
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Setting");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
         }
     }
 
