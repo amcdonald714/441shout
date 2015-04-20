@@ -1,5 +1,8 @@
 package in.kubryant.shout;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,10 +16,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -75,6 +75,21 @@ public class MainActivity extends ActionBarActivity {
                     shoutList.add(0, shout);
                     shoutAdapter.notifyDataSetChanged();
                     mDbHelper.insertMessage(shout);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+                    Notification n  = new Notification.Builder(getApplicationContext())
+                            .setContentTitle("Shout!")
+                            .setContentText(shout.getMsg())
+                            .setSmallIcon(R.drawable.notification)
+                            .setContentIntent(pIntent)
+                            .setAutoCancel(true).build();
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    notificationManager.notify(0, n);
                 }
             }
         });
@@ -148,6 +163,12 @@ public class MainActivity extends ActionBarActivity {
                 shoutList.clear();
                 shoutAdapter.notifyDataSetChanged();
                 return true;
+            case R.id.menu_sort_received_time:
+                Log.d("TEST", "ACTION SORT BY RECEIVED TIME");
+                return true;
+            case R.id.menu_sort_sent_time:
+                Log.d("TEST", "ACTION SORT BY SENT TIME");
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -174,5 +195,4 @@ public class MainActivity extends ActionBarActivity {
             mMessenger.broadcast(this, shout);
         }
     }
-
 }

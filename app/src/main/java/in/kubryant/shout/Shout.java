@@ -18,7 +18,8 @@ public class Shout extends AndHocMessage {
     }
 
     public Shout() {
-        record.put("time", getTimestamp());
+        setTime(getTimestamp());
+        setTimeRecv(getTimestamp());
     }
 
     private String getTimestamp() {

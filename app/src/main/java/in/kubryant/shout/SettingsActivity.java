@@ -154,7 +154,7 @@ public class SettingsActivity extends ActionBarActivity {
             ((SettingsActivity) getActivity()).getSupportActionBar().setTitle(R.string.pref_header_notifications);
             ((SettingsActivity) getActivity()).getSupportActionBar().setElevation(0);
         }
-        
+
         @Override
         public void onDestroy() {
             super.onDestroy();
