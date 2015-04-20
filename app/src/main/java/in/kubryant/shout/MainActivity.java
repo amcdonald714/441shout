@@ -165,7 +165,6 @@ public class MainActivity extends ActionBarActivity {
 
             shout.setUser(username);
             shout.setMsg(message);
-            shout.setTime(getTime());
             shout.setMsgId(msgId);
             shoutList.add(0, shout);
             repeatCheck.add(msgId);
@@ -176,9 +175,4 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private String getTime() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, h:mm a", Locale.US);
-        return sdf.format(cal.getTime());
-    }
 }

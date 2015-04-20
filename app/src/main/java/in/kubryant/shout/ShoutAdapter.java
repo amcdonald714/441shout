@@ -52,7 +52,7 @@ public class ShoutAdapter extends BaseAdapter {
 
         user.setText(shout.getUser());
         msg.setText(shout.getMsg());
-        time.setText(shout.getTime());
+        time.setText(shout.getHumanTime());
 
         return vi;
     }
