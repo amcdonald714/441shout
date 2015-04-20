@@ -61,8 +61,8 @@ public class AndHocService extends Service implements AndHocServiceInterface, Ru
             //restartListen();
             listen();
         } else {
-            stopListen();
             AndHocService.setListening(true);
+            stopListen();
             handler.postDelayed(this, listenFrequency);
         }
     }
