@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +43,17 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setTitle("Shout!");
         getSupportActionBar().setElevation(0);
 
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
+
         mDbHelper = new FeedReaderDbHelper(getApplicationContext());
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
@@ -59,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
                 if (!repeatCheck.contains(msgId)) {
                     repeatCheck.add(msgId);
-                    shoutList.add(shout);
+                    shoutList.add(0, shout);
                     shoutAdapter.notifyDataSetChanged();
                     mDbHelper.insertMessage(shout);
                 }
@@ -103,7 +116,7 @@ public class MainActivity extends ActionBarActivity {
             for (Shout message : messages) {
                 String msg = message.get("msg");
                 Log.d("FeedReader", "Reloading message: " + msg);
-                shoutList.add(message);
+                shoutList.add(0, message);
                 repeatCheck.add(message.getMsgId());
             }
             shoutAdapter.notifyDataSetChanged();
@@ -119,7 +132,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -155,13 +167,12 @@ public class MainActivity extends ActionBarActivity {
             shout.setMsg(message);
             shout.setTime(getTime());
             shout.setMsgId(msgId);
-            shoutList.add(shout);
-
+            shoutList.add(0, shout);
             repeatCheck.add(msgId);
+            mDbHelper.insertMessage(shout);
 
             shoutAdapter.notifyDataSetChanged();
             mMessenger.broadcast(this, shout);
-            mDbHelper.insertMessage(shout);
         }
     }
 

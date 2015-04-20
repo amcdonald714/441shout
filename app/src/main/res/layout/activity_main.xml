@@ -1,21 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="fill_parent" android:layout_width="match_parent"
-    android:paddingLeft="2dp"
     tools:context="in.kubryant.shout.MainActivity">
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/editTextMessage"
-        android:hint="@string/messageHint"
-        android:layout_alignParentBottom="true"
-        android:inputType="text"
-        android:layout_toStartOf="@+id/shoutButton"
-        android:layout_toLeftOf="@+id/shoutButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -24,16 +10,37 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/editTextMessage" />
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/shout"
-        android:id="@+id/shoutButton"
-        android:onClick="onClickShout"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout"
+        android:weightSum="1"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
+        android:background="@drawable/border">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editTextMessage"
+            android:hint="@string/messageHint"
+            android:inputType="text"
+            android:layout_weight="1" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shout"
+            android:id="@+id/shoutButton"
+            android:onClick="onClickShout" />
+    </LinearLayout>
 </RelativeLayout>
