@@ -44,10 +44,10 @@ public class SettingsActivity extends ActionBarActivity {
 
             this.findPreference(PREFERENCE_GENERAL)
                     .setOnPreferenceClickListener(new PreferenceClickListener(PREFERENCE_GENERAL));
-            this.findPreference(PREFERENCE_SYNC)
-                    .setOnPreferenceClickListener(new PreferenceClickListener(PREFERENCE_SYNC));
-            this.findPreference(PREFERENCE_NOTIFICATION)
-                    .setOnPreferenceClickListener(new PreferenceClickListener(PREFERENCE_NOTIFICATION));
+//            this.findPreference(PREFERENCE_SYNC)
+//                    .setOnPreferenceClickListener(new PreferenceClickListener(PREFERENCE_SYNC));
+//            this.findPreference(PREFERENCE_NOTIFICATION)
+//                    .setOnPreferenceClickListener(new PreferenceClickListener(PREFERENCE_NOTIFICATION));
         }
 
         private class PreferenceClickListener implements Preference.OnPreferenceClickListener {
