@@ -65,6 +65,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         values.put(FeedReaderContract.FeedEntry.COLUMN_USERNAME, message.get("user"));
         values.put(FeedReaderContract.FeedEntry.COLUMN_MESSAGE, message.get("msg"));
         values.put(FeedReaderContract.FeedEntry.COLUMN_TIMESTAMP, message.get("time"));
+        values.put(FeedReaderContract.FeedEntry.COLUMN_TIMERECV, message.get("timeRecv"));
 
         long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
     }

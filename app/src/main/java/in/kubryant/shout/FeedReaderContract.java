@@ -17,6 +17,7 @@ public final class FeedReaderContract {
         public static final String COLUMN_USERNAME = "user";
         public static final String COLUMN_MESSAGE = "msg";
         public static final String COLUMN_TIMESTAMP = "time";
+        public static final String COLUMN_TIMERECV = "timeRecv";
     }
 
     public static final String SQL_CREATE_ENTRIES =
@@ -26,6 +27,7 @@ public final class FeedReaderContract {
                     FeedEntry.COLUMN_USERNAME + " TEXT," +
                     FeedEntry.COLUMN_MESSAGE + " TEXT," +
                     FeedEntry.COLUMN_TIMESTAMP + " TEXT" +
+                    FeedEntry.COLUMN_TIMERECV + " TEXT " +
                     " )";
     public static final String SQL_DELETE_TABLE =
             "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
