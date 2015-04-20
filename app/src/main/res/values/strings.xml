@@ -6,4 +6,7 @@
     <string name="shout">Shout!</string>
     <string name="messageHint"> Type to Shout...</string>
     <string name="action_clear_messages">Clear Messages</string>
+    <string name="action_sort_messages">Sort By</string>
+    <string name="menu_sort_received_time">Sort by received time</string>
+    <string name="menu_sort_sent_time">Sort by sent time</string>
 </resources>

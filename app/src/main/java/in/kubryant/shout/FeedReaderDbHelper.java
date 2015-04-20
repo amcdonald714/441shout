@@ -15,9 +15,6 @@ import java.util.Set;
 
 import in.kubryant.andhoclib.src.AndHocMessage;
 
-/**
- * Created by camherringshaw on 4/18/15.
- */
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
     private static final String TAG = "FeedReader";
 

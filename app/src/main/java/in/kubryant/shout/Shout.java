@@ -19,7 +19,8 @@ public class Shout extends AndHocMessage implements Comparable<Shout> {
     }
 
     public Shout() {
-        record.put("time", getTimestamp());
+        setTime(getTimestamp());
+        setTimeRecv(getTimestamp());
     }
 
     public int compareTo(Shout s1) {

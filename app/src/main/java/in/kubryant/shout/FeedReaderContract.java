@@ -2,9 +2,6 @@ package in.kubryant.shout;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by camherringshaw on 4/18/15.
- */
 public final class FeedReaderContract {
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
@@ -26,7 +23,7 @@ public final class FeedReaderContract {
                     FeedEntry.COLUMN_UUID + " TEXT," +
                     FeedEntry.COLUMN_USERNAME + " TEXT," +
                     FeedEntry.COLUMN_MESSAGE + " TEXT," +
-                    FeedEntry.COLUMN_TIMESTAMP + " TEXT" +
+                    FeedEntry.COLUMN_TIMESTAMP + " TEXT," +
                     FeedEntry.COLUMN_TIMERECV + " TEXT " +
                     " )";
     public static final String SQL_DELETE_TABLE =
