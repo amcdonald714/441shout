@@ -2,12 +2,13 @@ package in.kubryant.shout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
 import in.kubryant.andhoclib.src.AndHocMessage;
 
-public class Shout extends AndHocMessage {
+public class Shout extends AndHocMessage implements Comparable<Shout> {
 
     public Shout(AndHocMessage message) {
         setUser(message.get("user"));
@@ -20,6 +21,28 @@ public class Shout extends AndHocMessage {
     public Shout() {
         record.put("time", getTimestamp());
     }
+
+    public int compareTo(Shout s1) {
+
+
+        // ascending: this - s1
+        // descending: s1 - this
+        return 0;
+    }
+
+    public static Comparator<Shout> ReceivedTimeSort = new Comparator<Shout>() {
+        @Override
+        public int compare(Shout s1, Shout s2) {
+            return 0;
+        }
+    };
+
+    public static Comparator<Shout> CreatedTimeSort = new Comparator<Shout>() {
+        @Override
+        public int compare(Shout s1, Shout s2) {
+            return 0;
+        }
+    };
 
     private String getTimestamp() {
         Calendar cal = Calendar.getInstance();

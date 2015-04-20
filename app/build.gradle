@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile(name: 'android-support-v4-preferencefragment-master-1.0.0', ext: 'aar')
     compile project(':andhoclib')
+    testCompile 'junit:junit:4.12'
 }
